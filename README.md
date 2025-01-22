@@ -1,4 +1,11 @@
-# Basic Garbage Collector in C
+<h1 align="center">
+	Basic Garbage Collector in C
+</h1> 
+<p align="center">
+	This project helped you? Give it a 🌟!
+</p>
+
+## Description
 
 This repository contains a basic implementation of a garbage collector in C. The garbage collector tracks memory allocations and frees them at the end of the program to prevent memory leaks.
 
