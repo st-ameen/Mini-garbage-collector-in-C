@@ -11,7 +11,7 @@ This repository contains a basic implementation of a garbage collector in C. The
 
 ### Example Usage
 
-To see an example of how to use the garbage collector, please refer to the `main.c` file in this repository.
+To see an example of how to use the garbage collector, please refer to the `garbage_collector.c` file in this repository.
 
 ### Steps to Run
 
