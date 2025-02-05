@@ -20,12 +20,14 @@ void	*my_malloc(size_t size)
 	if (!ptr)
 	{
 		fprintf(stderr, "Memory allocation failed\n");
+		free_all();
 		exit(EXIT_FAILURE);
 	}
 	new_alloc = (t_Allocation *)malloc(sizeof(t_Allocation));
 	if (!new_alloc)
 	{
 		fprintf(stderr, "Memory allocation failed\n");
+		free_all();
 		exit(EXIT_FAILURE);
 	}
 	new_alloc->ptr = ptr;
