@@ -1,6 +1,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+#define ALLOCATE 0
+#define FETCHPOINTERS 1
+
 // Define a structure to store allocation information
 typedef struct Allocation
 {
@@ -8,36 +11,8 @@ typedef struct Allocation
 	struct Allocation	*next;
 }						t_Allocation;
 
-static t_Allocation		*g_allocations = NULL;
-
-// Function to allocate memory and keep track of it
-void	*my_malloc(size_t size)
-{
-	void			*ptr;
-	t_Allocation	*new_alloc;
-
-	ptr = malloc(size);
-	if (!ptr)
-	{
-		fprintf(stderr, "Memory allocation failed\n");
-		free_all();
-		exit(EXIT_FAILURE);
-	}
-	new_alloc = (t_Allocation *)malloc(sizeof(t_Allocation));
-	if (!new_alloc)
-	{
-		fprintf(stderr, "Memory allocation failed\n");
-		free_all();
-		exit(EXIT_FAILURE);
-	}
-	new_alloc->ptr = ptr;
-	new_alloc->next = g_allocations;
-	g_allocations = new_alloc;
-	return (ptr);
-}
-
 // Function to free all tracked allocations
-void	free_all(void)
+void	free_all(t_Allocation *g_allocations)
 {
 	t_Allocation	*current;
 	t_Allocation	*next;
@@ -53,6 +28,33 @@ void	free_all(void)
 	g_allocations = NULL;
 }
 
+// Function to allocate memory and keep track of it
+t_Allocation	*my_malloc(size_t size, int FUNCTION)
+{
+	static t_Allocation		*g_allocations = NULL;
+	t_Allocation			*new_alloc;
+
+	if (FUNCTION)
+		return (g_allocations);
+	new_alloc = (t_Allocation *)malloc(sizeof(t_Allocation));
+	if (!new_alloc)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		free_all(g_allocations);
+		exit(EXIT_FAILURE);
+	}
+	new_alloc->ptr = malloc(size);
+	if (!new_alloc->ptr)
+	{
+		fprintf(stderr, "Memory allocation failed\n");
+		free_all(g_allocations);
+		exit(EXIT_FAILURE);
+	}
+	new_alloc->next = g_allocations;
+	g_allocations = new_alloc;
+	return (new_alloc);
+}
+
 // TEST------------------------------------------------
 int	main(void)
 {
@@ -61,8 +63,8 @@ int	main(void)
 	int		i;
 
 	i = 0;
-	arr = (int *)my_malloc(10 * sizeof(int));
-	str = (char *)my_malloc(50 * sizeof(char));
+	arr = (int *)my_malloc(10 * sizeof(int), ALLOCATE)->ptr;
+	str = (char *)my_malloc(50 * sizeof(char), ALLOCATE)->ptr;
 	while (i < 10)
 	{
 		arr[i] = i;
@@ -74,7 +76,7 @@ int	main(void)
 	while (i < 10)
 		printf("%d ", arr[i++]);
 	printf("\nString: %s\n", str);
-	free_all();
+	free_all(my_malloc(0, FETCHPOINTERS));
 	return (0);
 }
 //----------------------------------------------------

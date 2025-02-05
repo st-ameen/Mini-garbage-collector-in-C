@@ -13,8 +13,8 @@ This repository contains a basic implementation of a garbage collector in C. The
 
 ### Functions
 
-- `void *my_malloc(size_t size)`: Allocates memory and keeps track of the allocation.
-- `void free_all()`: Frees all tracked allocations.
+- `t_Allocation	*my_malloc(size_t size, int FUNCTION)`: Allocates memory and keeps track of the allocation when using the flag ALLOCATE, returns the head of the list of the allocated pointer when using the flag FETCHPOINTERS.
+- `void	free_all(t_Allocation *g_allocations)`: Frees all tracked allocations, call using my_malloc with the FETCHPOINTERS flag.
 
 ### Example Usage
 
